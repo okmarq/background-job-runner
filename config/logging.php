@@ -156,6 +156,12 @@ return [
             'path' => storage_path('logs/plagiarism.log'),
             'level' => 'critical',
         ],
+
+        'no_plagiarism' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/plagiarism.log'),
+            'level' => 'error',
+        ],
     ],
 
 ];

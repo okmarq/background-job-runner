@@ -20,9 +20,9 @@ return [
     ],
     'queue' => [
         'priority' => [
-            'low' => '3',
-            'medium' => '2',
-            'high' => '1',
+            'low' => 3,
+            'medium' => 2,
+            'high' => 1,
         ]
     ]
 ];
