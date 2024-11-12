@@ -127,6 +127,35 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'background_jobs' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/background_jobs.log'),
+            'level' => 'info',
+        ],
+
+        'background_jobs_errors' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/background_jobs_errors.log'),
+            'level' => 'error',
+        ],
+
+        'assignment_processing' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/assignment_processing.log'),
+            'level' => 'info',
+        ],
+
+        'analytics' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/analytics.log'),
+            'level' => 'info',
+        ],
+
+        'plagiarism' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/plagiarism.log'),
+            'level' => 'critical',
+        ],
     ],
 
 ];
