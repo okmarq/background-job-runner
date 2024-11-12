@@ -24,7 +24,7 @@ class AutomatedGradingJob implements ShouldQueue
     public function handle(): void
     {
         $assignment = Assignment::findOrFail($this->assignmentId);
-        // Sample grading logic (e.g., matching answers for objective questions)
+        // Example grading logic like matching answers for objective questions
         $score = $this->calculateScore();
         $assignment->update([
             'score' => $score,

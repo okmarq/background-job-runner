@@ -23,7 +23,7 @@ class GenerateAnalyticsReportJob implements ShouldQueue
     public function handle(): void
     {
         $assignments = Assignment::where('course', $this->course)->get();
-        // Sample analytics generation
+        // Example analytics generation
         $averageScore = $assignments->avg('score');
         Log::channel('analytics')->info('Generated analytics report', [
             'course' => $this->course,
