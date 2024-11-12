@@ -60,7 +60,8 @@ class RunBackgroundJob extends Command implements PromptsForMissingInput
             $this->error($e->getMessage());
             Log::channel('background_jobs_errors')->error("Job failed", [
                 'error' => $e->getMessage(),
-                'status' => config('constants.status.failed')
+                'status' => config('constants.status.failed'),
+                'timestamp' => now()->toDateTimeString(),
             ]);
         }
     }
@@ -79,7 +80,8 @@ class RunBackgroundJob extends Command implements PromptsForMissingInput
             Log::channel('background_jobs')->info("Job {$job->id} completed: {$job->class}@{$job->method}", [
                 'parameters' => $job->parameters,
                 'result' => $result,
-                'status' => config('constants.status.completed')
+                'status' => config('constants.status.completed'),
+                'timestamp' => now()->toDateTimeString(),
             ]);
             $this->info("Job {$job->id}: {$job->class}@{$job->method} executed successfully.");
             return $job;
@@ -96,7 +98,8 @@ class RunBackgroundJob extends Command implements PromptsForMissingInput
                 Log::channel('background_jobs_errors')->error("Job {$job->id} failed: {$job->class}@{$job->method}", [
                     'parameters' => $job->parameters,
                     'error' => $e->getMessage(),
-                    'status' => config('constants.status.failed')
+                    'status' => config('constants.status.failed'),
+                    'timestamp' => now()->toDateTimeString(),
                 ]);
             }
             return null;
