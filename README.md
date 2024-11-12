@@ -6,22 +6,17 @@ Background Job Runner is system that executes PHP classes as background jobs, in
 
 ## Features
 
-- The Job runner is designed to be highly modular, scalable and simple to use in any given use case.
-- The use case presented is academic where a student submits an assignment and the following is carried out by the job process:
-
-1. Grading,
-2. Student notification by email
-3. Course analytics
-4. Plagiarism check.
-
-- For any given use case, a job can be
-
-1. Started
-2. Cancelled
-3. Retried
-4. Viewed
-
-- The processing can only be accessed by a user with an Admin role
+1. Asynchronous Processing: Critical tasks like grading and notifications are handled independently, allowing students to get immediate feedback
+   without burdening the System.
+2. Prioritization and Delays: High-priority tasks like grading run first and if it fails, it is retried more than other jobs running as well, while
+   lower-priority tasks like analytics run with delays and a deduction in retry value to reduce resource contention.
+3. Detailed Monitoring: The dashboard provides a transparent view of all background jobs, allowing admins to monitor task completion, retry
+   attempts.
+    - performance analytics is an advanced feature that will add value to the system but wasn't implemented, it will require a specific use
+      case whose performance need to be measured against the system and other information.
+4. Enhanced Security: Only authorized job classes are executed in the background, ensuring the integrity and safety of the System.
+5. Modularity: The application is designed in such a way the academic use case doesn't seep into the Background runner's domain, which makes it
+   easier to make it a stand-alone system that other use case can make use of.
 
 ## Requirements
 
@@ -39,8 +34,8 @@ Background Job Runner is system that executes PHP classes as background jobs, in
 
 - **Delay**: Set in seconds for job execution.
 - **Priority**: Jobs can be assigned a priority (1 = High, 2 = Medium, 3 = Low).
-  - A custom priority calculation is done by taking the absolute difference between the job's delay and retry value with the highest priority 
-    taking an additional retry and the lowest taking a deduction in retry in case of failure.
+    - A custom priority calculation is done by taking the absolute difference between the job's delay and retry value with the highest priority
+      taking an additional retry and the lowest taking a deduction in retry in case of failure.
 
 ## Dashboard Features
 
@@ -70,7 +65,7 @@ Background Job Runner is system that executes PHP classes as background jobs, in
 
 3. **Set up environment:**
 
-   Copy .env.example to .env and update database credentials adding the details below to your env file.
+   Copy `.env.example` to `.env` and update database credentials adding the details below to your env file.
 
        ```
        For testing purposes only
@@ -98,37 +93,32 @@ Background Job Runner is system that executes PHP classes as background jobs, in
     php artisan migrate --seed
     ```
 
-6. **Start queue:**
-
-    ```
-    php artisan queue:work
-    ```
-
-7. **Build the application front end:**
+6. **Build the application front end:**
 
     ```
     npm run dev
     ```
 
-8. **Serve the application:**
+7. **Serve the application:**
 
     ```
     php artisan serve
    ```
 
-## Workflow
+## Conclusion
 
-1. Asynchronous Processing: Critical tasks like grading and notifications are handled independently, allowing students to get immediate feedback
-   without burdening the System.
-2. Prioritization and Delays: High-priority tasks like grading run first and if it fails, it is retried more than other jobs running as well, while 
-   lower-priority tasks like analytics run with delays and a deduction in retry value to reduce resource contention.
-3. Detailed Monitoring: The dashboard provides a transparent view of all background jobs, allowing admins to monitor task completion, retry 
-   attempts. 
-   - performance analytics is an advanced feature that will add value to the system but wasn't implemented, it will require a specific use 
-      case whose performance need to be measured against the system and other information.
-4. Enhanced Security: Only authorized job classes are executed in the background, ensuring the integrity and safety of the System.
-5. Modularity: The application is designed in such a way the academic use case doesn't seep into the Background runner's domain, which makes it 
-   easier to make it a stand alone system that other use case can make use of.
+- The Job runner is designed to be highly modular, scalable and simple to use in any given use case.
+- The use case presented is academic where a student submits an assignment and the following is carried out by the job process:
+    1. Grading,
+    2. Student notification by email
+    3. Course analytics
+    4. Plagiarism check.
+- For any given use case, a job can be
+    1. Started
+    2. Cancelled
+    3. Retried
+    4. Viewed
+- The processing can only be accessed by a user with an Admin role
 
 ## License
 
