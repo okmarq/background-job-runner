@@ -4,6 +4,22 @@
 
 Background Job Runner is system that executes PHP classes as background jobs, independent of Laravel's built-in queue system.
 
+The background job runner works by using the helper function `runBackgroundJob` that accepts a background job whose fields contain the class, method,
+parameters, output, retries, delay,
+priority,
+and status.
+
+This job then has it's class name and method validated to ensure the class and method exists as well as checking if the names contain non-alphanumeric
+characters.
+
+To further strengthen the security of the application, only classes that are found in the `$allowedClasses` array of the `JobValidator` class are
+processed.
+
+Next the command is started according to the OS.
+The command prioritizes the jobs it starts then runs the methods of the class it receives, logging relevant information about the process.
+
+From the admin dashboard, a job can be started, cancelled, or retried depending on its status.
+
 ## Features
 
 1. Asynchronous Processing: Critical tasks like grading and notifications are handled independently, allowing students to get immediate feedback
