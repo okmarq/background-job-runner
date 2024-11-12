@@ -31,11 +31,31 @@ class RunBackgroundJob extends Command implements PromptsForMissingInput
         try {
             $id = $this->argument('backgroundJob');
             $job = BackgroundJob::findOrFail($id);
-            if ($job->delay > 0) sleep($job->delay);
+            // dummy logic for prioritizing Jobs
+            $delay = 0;
+            switch ($job->priority) {
+                case 1:
+                    if ($job->delay > 0)
+                        $delay = intval(abs($job->delay - ceil($job->retries / $job->delay)));
+                    else
+                        $job->retries += 1;
+                    break;
+                case 2:
+                    if ($job->delay > 0)
+                        $delay = intval(abs($job->delay - ceil($job->retries / $job->delay)));
+                    break;
+                case 3:
+                    if ($job->delay > 0)
+                        $delay = intval(ceil($job->retries / $job->delay));
+                    else
+                        if ($job->retries > 0) $job->retries -= 1;
+                    break;
+            }
+            if ($delay > 0) sleep($delay);
             $job->update([
                 'status' => config('constants.status.running'),
             ]);
-            $this->process($job, $job->retries);
+            $this->process($job, $job->retries - 1);
         } catch (Exception $e) {
             $this->error($e->getMessage());
             Log::channel('background_jobs_errors')->error("Job failed", [
@@ -48,15 +68,9 @@ class RunBackgroundJob extends Command implements PromptsForMissingInput
     public function process(BackgroundJob $job, int $retries): ?BackgroundJob
     {
         try {
-//            $queue = match ($job->priority) {
-//                1 => config('constants.queue.priority.high', 'high'),
-//                2 => config('constants.queue.priority.medium', 'medium'),
-//                default => config('constants.queue.priority.low', 'low'),
-//            };
-//            dispatch((new $job->class(...json_decode($job->parameters)))->onQueue($queue));
             $instance = new $job->class(...json_decode($job->parameters));
             $result = call_user_func_array([$instance, $job->method], json_decode($job->parameters));
-            $attempt = $job->attempt += 1;
+            $attempt = $job->attempt + 1;
             $job->update([
                 'output' => $result != null ? json_encode($result) : null,
                 'attempt' => $attempt,
