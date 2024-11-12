@@ -86,11 +86,11 @@ class AssignmentController extends Controller
                 'retries' => 2,
                 'delay' => 10
             ]);
+            DB::commit();
             runBackgroundJob($automatedGradingJob);
             runBackgroundJob($notifyStudentOfSubmissionJob);
             runBackgroundJob($generateAnalyticsReportJob);
             runBackgroundJob($checkForPlagiarismJob);
-            DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
             Log::error("Error processing assignment: {$e->getMessage()}", $e->getTrace());

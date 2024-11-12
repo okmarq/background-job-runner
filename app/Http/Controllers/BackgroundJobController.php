@@ -7,7 +7,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Log;
 
 class BackgroundJobController extends Controller
 {
@@ -16,18 +15,14 @@ class BackgroundJobController extends Controller
      */
     public function index(): View|Factory|Application
     {
-        $filterStatus = request('status');
-        $filterPriority = request('priority');
-        $jobLogs = $this->getJobLogs('background_jobs.log', $filterStatus, $filterPriority);
+        $status = request('status');
+        $priority = request('priority');
+        $jobLogs = $this->getJobLogs('background_jobs.log', $status, $priority);
         $errorLogs = $this->getJobLogs('background_jobs_errors.log');
         $activeJobs = BackgroundJob::where('status', config('constants.status.running'))->get();
         $jobs = BackgroundJob::query();
-        if (isset($filterStatus)) {
-            $jobs->where('status', $filterStatus);
-        }
-        if (isset($filterPriority)) {
-            $jobs->where('priority', $filterPriority);
-        }
+        if (isset($status)) $jobs->where('status', $status);
+        if (isset($priority)) $jobs->where('priority', $priority);
         return view('pages.background_jobs.index', [
             'jobs' => $jobs->get(),
             'activeJobs' => $activeJobs,
@@ -68,7 +63,7 @@ class BackgroundJobController extends Controller
         if ($backgroundJob->status === config('constants.status.pending')) {
             runBackgroundJob($backgroundJob);
             $backgroundJob->update(['status' => config('constants.status.running')]);
-            return redirect()->route('background_jobs.index')->with('success', 'Job has been started.');
+            return redirect()->route('background_jobs.index')->with('success', 'Job processing has started.');
         }
         return redirect()->route('background_jobs.index')->with('error', "Can't start this Job.");
     }
