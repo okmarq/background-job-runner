@@ -20,7 +20,8 @@ if (!function_exists('runBackgroundJob')) {
             Log::channel('background_jobs_errors')->error("Job {$job->id} failed: {$job->class}@{$job->method}", [
                 'parameters' => json_decode($job->parameters),
                 'error' => $e->getMessage(),
-                'status' => config('constants.status.failed')
+                'status' => config('constants.status.failed'),
+                'timestamp' => now()->toDateTimeString(),
             ]);
         }
     }
