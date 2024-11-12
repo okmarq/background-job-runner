@@ -34,6 +34,7 @@ class AutomatedGradingJob implements ShouldQueue
             'course' => $assignment->course,
             'score' => $score,
             'user' => $assignment->user->fullName(),
+            'timestamp' => now()->toDateTimeString(),
         ]);
     }
 

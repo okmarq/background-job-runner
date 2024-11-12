@@ -28,7 +28,8 @@ class GenerateAnalyticsReportJob implements ShouldQueue
         Log::channel('analytics')->info('Generated analytics report', [
             'course' => $this->course,
             'average_score' => $averageScore,
-            'assignment_count' => $assignments->count()
+            'assignment_count' => $assignments->count(),
+            'timestamp' => now()->toDateTimeString(),
         ]);
     }
 }

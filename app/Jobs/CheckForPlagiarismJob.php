@@ -34,13 +34,15 @@ class CheckForPlagiarismJob implements ShouldQueue
             Log::channel('plagiarism')->critical("Checked for plagiarism", [
                 'assignment' => $assignment->id,
                 'plagiarism_score' => $result['score'],
-                'status' => $result['status']
+                'status' => $result['status'],
+                'timestamp' => now()->toDateTimeString(),
             ]);
         else
             Log::channel('no_plagiarism')->error("Checked for plagiarism", [
                 'assignment' => $assignment->id,
                 'plagiarism_score' => $result['score'],
-                'status' => $result['status']
+                'status' => $result['status'],
+                'timestamp' => now()->toDateTimeString(),
             ]);
     }
 }
