@@ -16,7 +16,8 @@ class CheckForPlagiarismJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(protected int $assignmentId)
-    {}
+    {
+    }
 
     /**
      * Execute the job.
@@ -25,14 +26,21 @@ class CheckForPlagiarismJob implements ShouldQueue
     {
         $assignment = Assignment::findOrFail($this->assignmentId);
         $plagiarismChecker = new PlagiarismChecker();
-        $result = $plagiarismChecker->check();
+        $result = $plagiarismChecker->check($assignment);
         $assignment->update([
             'plagiarism_score' => $result['score'],
         ]);
-        Log::channel('plagiarism')->info("Checked for plagiarism", [
-            'assignment' => $assignment->id,
-            'plagiarism_score' => $result['score'],
-            'status' => $result['status']
-        ]);
+        if ($result['score'] < 50)
+            Log::channel('plagiarism')->critical("Checked for plagiarism", [
+                'assignment' => $assignment->id,
+                'plagiarism_score' => $result['score'],
+                'status' => $result['status']
+            ]);
+        else
+            Log::channel('no_plagiarism')->error("Checked for plagiarism", [
+                'assignment' => $assignment->id,
+                'plagiarism_score' => $result['score'],
+                'status' => $result['status']
+            ]);
     }
 }
