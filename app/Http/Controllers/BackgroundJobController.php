@@ -46,9 +46,8 @@ class BackgroundJobController extends Controller
             $backgroundJob->status === config('constants.status.cancelled')) {
             // the attempt will be the retry plus the number of each rerun
             // change the retry to 1 so it runs only once
-            $attempt = $backgroundJob->retries;
+            $backgroundJob->attempt += $backgroundJob->retries;
             $backgroundJob->retries = 1;
-            $backgroundJob->attempt += $attempt;
             $backgroundJob->status = config('constants.status.running');
             $backgroundJob->save();
             runBackgroundJob($backgroundJob);
